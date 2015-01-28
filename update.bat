@@ -3,16 +3,6 @@ title Chromium-Download-Manager
 PUSHD %~dp0
 cd /d "%~dp0"
 
-:Permission check
-if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (set SystemPath = %SystemRoot%\SysWOW64) else (set SystemPath = %SystemRoot%\system32)
-::rd "%SystemPath%\Test_Permissions" > nul 2 > nul
-::md "%SystemPath%\Test_Permissions" 2 > nul || (echo Require Administrator Permission. && pause > nul && Exit)
-::rd "%SystemPath%\Test_Permissions" > nul 2 > nul
-del /f /q %SystemPath%\TestPermission.log
-echo "Permission check." >> %SystemPath%\TestPermission.log
-if not exist %SystemPath%\TestPermission.log (echo Require Administrator Permission. && pause > nul && Exit)
-del /f /q %SystemPath%\TestPermission.log
-
 :Ver
 Ver|Find /I "5.1" > nul 2>nul 2>nul
 If "%ERRORLEVEL%"=="0" (Goto Files check)
