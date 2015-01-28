@@ -7,8 +7,8 @@ A downloader based on batch and Aria2.
 
 ### Summary
 * 下载 Chromium
-* 配置 Chromium
-* 创建快捷方式
+* 配置 Chromium（为便携版）
+* 创建快捷方式（以快捷方式或 BAT 启动，才是便携版）
 
 ### Feature
 * 提供三种下载方式：
