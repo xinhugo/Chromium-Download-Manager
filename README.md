@@ -16,10 +16,11 @@ A downloader based on batch and Aria2.
     * 自定义服务器下载（IP 地址/域名）
     * 代理下载（流量经 HTTP/HTTPS 本地代理客户端）
 * 多线程下载、断点续传、验证 SSL 证书（自定义下载除外），适应中国（对外）网络。
-* 解压缩并创建桌面快捷方式。
+* 用户数据（不含缓存）保存在当前目录，系便携版本。
 
 ### Usage
-* 首次使用/更换目录/更新程序，运行 update.bat ，按提示操作即可。
+* 首次使用/更换目录/更新程序，运行 **update.bat** ，按提示操作即可。
+* **下载及配置完成后**，可运行 Chromium.bat 或 Chromium-PPAPI-FLASH.bat 启动便携版 Chromium。
 * 因为字数限制，路径过长时，快捷方式**可能缺少**部分参数；这时，请运行 Chromium.bat 或 Chromium-PPAPI-FLASH.bat。
 * Chromium.bat 为 **未内置** Flash 版本，Chromium-PPAPI-FLASH.bat 为**内置** Flash 版本。
 * 启用 Enable NPAPI，即可启用系统安装的 Adobe Flash Player。chrome://flags/#enable-npapi
