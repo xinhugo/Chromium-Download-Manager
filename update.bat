@@ -123,9 +123,7 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
     )
 ) 
 if not exist chrome-win32.zip goto Download_Link
-:Finish
-echo.&echo    处理完成，按任意键返回。
-pause >nul &goto Main
+goto Finish
 
 :Config
 (
