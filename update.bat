@@ -112,7 +112,7 @@ SET /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
 if not exist chrome-win32.zip.aria2 if exist chrome-win32.zip del chrome-win32.zip
 if exist LAST_CHANGE del LAST_CHANGE
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_CHANGE --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/LAST_CHANGE
-if not exist LAST_CHANGE goto Download_Link
+if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto Download
 (
     fc LAST_CHANGE chrome-win32\LAST_CHANGE
 ) && (
@@ -123,6 +123,9 @@ if not exist LAST_CHANGE goto Download_Link
     )
 ) 
 if not exist chrome-win32.zip goto Download_Link
+:Finish
+echo.&echo    处理完成，按任意键返回。
+pause >nul &goto Main
 
 :Config
 (
