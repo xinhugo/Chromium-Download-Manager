@@ -45,7 +45,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/1/28；开发：Phuslu，Hugo。
+echo     版本：2015/2/1；开发：Phuslu，Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -66,9 +66,12 @@ echo     即将 下载 Chromium......
 echo.&echo. 
 echo     将调用 %aria2c% 下载。
 echo.&echo. 
-echo     1)直接下载（不使用代理）
-echo     2)自定义服务器下载（IP 地址/域名）
-echo     3)代理下载（流量经 HTTP/HTTPS 本地代理客户端）
+echo     1)直接下载（www.google.com.hk）
+echo     2)直接下载（www.google.co.jp）
+echo     3)直接下载（dl.google.com）
+echo.&echo. 
+echo     4)自定义服务器下载（IP 地址/域名）
+echo     5)代理下载（流量经 HTTP/HTTPS 本地代理客户端）
 echo.
 echo     4)返回主菜单
 echo.&echo.
@@ -78,22 +81,34 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/1/28；开发：Phuslu，Hugo。
+echo     版本：2015/2/1；开发：Phuslu，Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
 SET /P ST=   请输入数字：
 echo. 
-if /I "%ST%"=="1" goto Download_Direct
-if /I "%ST%"=="2" goto Download_Custom
-if /I "%ST%"=="3" goto Download_Proxy
-if /I "%ST%"=="4" goto Main
+if /I "%ST%"=="1" goto Download_Direct_1
+if /I "%ST%"=="2" goto Download_Direct_2
+if /I "%ST%"=="3" goto Download_Direct_3
+if /I "%ST%"=="4" goto Download_Custom
+if /I "%ST%"=="5" goto Download_Proxy
+if /I "%ST%"=="6" goto Main
 echo    无效选择，按任意键返回！
 pause >nul
 goto Download
 
-:Download_Direct
+:Download_Direct_1
 set Server=www.google.com.hk
+SET CA=--check-certificate=true
+goto Download_Link
+
+:Download_Direct_2
+set Server=www.google.co.jp
+SET CA=--check-certificate=true
+goto Download_Link
+
+:Download_Direct_3
+set Server=dl.google.com
 SET CA=--check-certificate=true
 goto Download_Link
 
