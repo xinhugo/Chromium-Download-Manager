@@ -45,7 +45,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/2/1；开发：Phuslu，Hugo。
+echo     版本：2015/3/10；开发：Phuslu，Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -158,7 +158,7 @@ goto Finish
 
 :Link
 shortcut.exe /A:C /F:"Chromium.lnk" /T:"%~dp0chrome-win32\chrome.exe" /P:"--no-first-run --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromeCache""" /W:"%~dp0chrome-win32"
-shortcut.exe /A:C /F:"Chromium-PPAPI-FLASH.lnk" /T:"%~dp0chrome-win32\chrome.exe" /P:"--no-first-run --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromeCache" --ppapi-flash-path=%~dp0pepflashplayer.dll --ppapi-flash-version=16.0.0.296"" /W:"%~dp0chrome-win32"
+shortcut.exe /A:C /F:"Chromium-PPAPI-FLASH.lnk" /T:"%~dp0chrome-win32\chrome.exe" /P:"--no-first-run --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromeCache" --ppapi-flash-path=%~dp0pepflashplayer.dll --ppapi-flash-version=16.0.0.305"" /W:"%~dp0chrome-win32"
 goto Finish
 
 :Delete
