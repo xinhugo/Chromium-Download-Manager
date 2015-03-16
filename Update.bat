@@ -163,7 +163,6 @@ if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-pause
 start /min Create-Shortcut.bat
 goto Finish
 
