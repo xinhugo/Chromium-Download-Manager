@@ -135,7 +135,7 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
 (
     fc LAST_CHANGE chrome-win32\LAST_CHANGE
 ) && (
-    echo Already Lastest Version ! && pause>NUL
+    echo Already Lastest Version ! && pause >nul&goto Main
 ) || (
     for /f %%I in (LAST_CHANGE) do (
         %aria2c% -c -s16 -x16 -k1m --remote-time=true %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o chrome-win32.zip --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/%%I/chrome-win32.zip
@@ -146,7 +146,6 @@ goto Finish
 
 :Config
 if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-pause
 (
     if exist chrome-win32 rd /s /q chrome-win32
     7za_x86 x chrome-win32.zip
@@ -160,7 +159,7 @@ pause
 ) && (
     if not exist "%~dp0Data" (md "%~dp0Data")
 ) 
-7za_x86 x PepFlashPlayer.7z
+7za_x86 x -y PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
@@ -178,18 +177,20 @@ Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
 if not exist LAST_PepperFlash.aria2 if exist LAST_PepperFlash del LAST_PepperFlash
-%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -O https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_PepperFlash
+%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_PepperFlash https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_PepperFlash
 if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&goto Main
-fc LAST_PepperFlash chrome-win32\LAST_PepperFlash &goto Shortcut
-copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
-if not exist PepFlashPlayer.7z.aria2 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
-%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -O https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/PepFlashPlayer.7z
-if not exist PepFlashPlayer.7z goto Flash
-if exist pepflashplayer.dll del /s /q pepflashplayer.dll
-if exist Chromium-PPAPI-FLASH.bat del /s /q Chromium-PPAPI-FLASH.bat
-if exist Chromium-PPAPI-FLASH.lnk del /s /q Chromium-PPAPI-FLASH.lnk
-7za_x86 x PepFlashPlayer.7z
-goto Shortcut
+(
+    fc LAST_PepperFlash chrome-win32\LAST_PepperFlash 
+) && (
+    echo Already Lastest Version ! && pause >nul&goto Main
+) || (
+    if not exist PepFlashPlayer.7z.aria2 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
+    %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o PepFlashPlayer.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/PepFlashPlayer.7z
+    if not exist PepFlashPlayer.7z goto Flash
+    7za_x86 x -y PepFlashPlayer.7z
+    copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
+	goto Shortcut
+) 
 
 :Finish
 echo.&echo    处理完成，按任意键返回。
