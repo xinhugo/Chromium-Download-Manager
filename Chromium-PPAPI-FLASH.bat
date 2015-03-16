@@ -1,2 +1,0 @@
-@echo off
-"%~dp0chrome-win32\chrome.exe" --no-first-run --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromeCache" --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=16.0.0.305
