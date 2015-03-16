@@ -187,6 +187,7 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o PepFlashPlayer.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/PepFlashPlayer.7z
     if not exist PepFlashPlayer.7z goto Flash
     7za_x86 x -y PepFlashPlayer.7z
+	del PepFlashPlayer.7z
     copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
 	goto Shortcut
 ) 
