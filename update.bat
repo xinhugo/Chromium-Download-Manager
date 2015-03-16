@@ -160,7 +160,7 @@ pause
 ) && (
     if not exist "%~dp0Data" (md "%~dp0Data")
 ) 
-7za_x86 x pepflashplayer.7z
+7za_x86 x PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
@@ -182,13 +182,13 @@ if not exist LAST_PepperFlash.aria2 if exist LAST_PepperFlash del LAST_PepperFla
 if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&goto Main
 fc LAST_PepperFlash chrome-win32\LAST_PepperFlash &goto Shortcut
 copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
-if not exist pepflashplayer.7z.aria2 if exist pepflashplayer.7z del pepflashplayer.7z
-%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -O https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/pepflashplayer.7z
-if not exist pepflashplayer.7z goto Flash
+if not exist PepFlashPlayer.7z.aria2 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
+%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -O https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/PepFlashPlayer.7z
+if not exist PepFlashPlayer.7z goto Flash
 if exist pepflashplayer.dll del /s /q pepflashplayer.dll
 if exist Chromium-PPAPI-FLASH.bat del /s /q Chromium-PPAPI-FLASH.bat
 if exist Chromium-PPAPI-FLASH.lnk del /s /q Chromium-PPAPI-FLASH.lnk
-7za_x86 x pepflashplayer.7z
+7za_x86 x PepFlashPlayer.7z
 goto Shortcut
 
 :Finish
