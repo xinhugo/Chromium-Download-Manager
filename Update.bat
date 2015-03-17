@@ -22,10 +22,12 @@ Pause>nul
 exit
 
 :Files check
-if not exist 7za_x86.exe  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 7za_x86.exe，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
-if exist "aria2\aria2c.exe" Set aria2c="aria2\aria2c.exe" &goto Main
+if exist "Tools\7za_x86.exe" Set sza="Tools\7za_x86.exe"
+if not exist %sza%  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 %sza%，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
+if not exist "Tools\Create-Shortcut.bat" echo.&echo.&echo.&echo.&echo.&echo.&echo                             缺少 Tools\Create-Shortcut.bat，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
+if exist "Tools\aria2\aria2c.exe" Set aria2c="Tools\aria2\aria2c.exe" &goto Main
 if exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe" Set aria2c="D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"
-if not exist "aria2\aria2c.exe" if not exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 aria2，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
+if not exist "Tools\aria2\aria2c.exe" if not exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 aria2，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
 
 :Main
 cls
@@ -148,7 +150,7 @@ goto Finish
 if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 (
     if exist chrome-win32 rd /s /q chrome-win32
-    7za_x86 x chrome-win32.zip
+    %sza% x chrome-win32.zip
 ) && (
     copy /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
 ) && (
@@ -159,11 +161,11 @@ if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip
 ) && (
     if not exist "%~dp0Data" (md "%~dp0Data")
 ) 
-7za_x86 x -y PepFlashPlayer.7z
+if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-start /min Create-Shortcut.bat
+start /min Tools\Create-Shortcut.bat
 goto Finish
 
 :Delete
@@ -186,7 +188,7 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     if not exist PepFlashPlayer.7z.aria2 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o PepFlashPlayer.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/PepFlashPlayer.7z
     if not exist PepFlashPlayer.7z goto Flash
-    7za_x86 x -y PepFlashPlayer.7z
+    %sza% x -y PepFlashPlayer.7z
 	del LAST_PepperFlash
 	del PepFlashPlayer.7z
     copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
