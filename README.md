@@ -27,8 +27,8 @@ A downloader based on batch and Aria2.
 
 ### Library
 * 在 phuslu 的 chromium 项目基础上改进。
-* 下载支持由 aria2 提供，aria2 目录内容为 aria2-1.18.8-win-32bit。
-* 解压缩支持由 7-Zip 提供，7za_x86.exe 是 7-Zip 9.20。
+* 下载支持由 aria2 提供。
+* 解压缩支持由 7-Zip 提供。
 * 创建快捷方式支持由 shortcut.exe 提供。
 
 ### Platform

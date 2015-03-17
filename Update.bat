@@ -26,6 +26,8 @@ if exist "Tools\7za_x86.exe" Set sza="Tools\7za_x86.exe"
 if not exist %sza%  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 %sza%，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
 if not exist "Tools\Create-Shortcut.bat" echo.&echo.&echo.&echo.&echo.&echo.&echo                             缺少 Tools\Create-Shortcut.bat，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
 if not exist "Tools\Shortcut.exe" echo.&echo.&echo.&echo.&echo.&echo.&echo                             缺少 Tools\Shortcut.exe，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
+if exist Tools\aria2.7z if exist Tools\aria2 rd /s /q Tools\aria2 &%sza% x -y Tools\aria2.7z
+if exist Tools\aria2.7z %sza% x -y Tools\aria2.7z &del /q Tools\aria2.7z
 if exist "Tools\aria2\aria2c.exe" Set aria2c="Tools\aria2\aria2c.exe" &goto Main
 if exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe" Set aria2c="D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"
 if not exist "Tools\aria2\aria2c.exe" if not exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 aria2，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
