@@ -171,11 +171,6 @@ if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-wi
 start /min Tools\Create-Shortcut.bat
 goto Finish
 
-:Delete
-if exist chrome-win32.zip del chrome-win32.zip
-if exist chrome-win32.zip.aria2 del chrome-win32.zip.aria2
-goto Finish
-
 :Flash
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
@@ -197,6 +192,12 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
 	goto Shortcut
 ) 
+
+:Delete
+if exist chrome-win32.zip del chrome-win32.zip
+if exist chrome-win32.zip.aria2 del chrome-win32.zip.aria2
+if exist PepFlashPlayer.7z del PepFlashPlayer.7z
+if exist PepFlashPlayer.7z.aria2 del PepFlashPlayer.7z.aria2
 
 :Finish
 echo.&echo    处理完成，按任意键返回。
