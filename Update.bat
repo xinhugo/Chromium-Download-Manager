@@ -142,11 +142,12 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
 ) && (
     echo Already Lastest Version ! && pause >nul&goto Main
 ) || (
-    for /f %%I in (LAST_CHANGE) do (
+    :Download_chrome-win32.zip
+	for /f %%I in (LAST_CHANGE) do (
         %aria2c% -c -s16 -x16 -k1m --remote-time=true %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o chrome-win32.zip --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/%%I/chrome-win32.zip
     )
 ) 
-if not exist chrome-win32.zip goto Download_Link
+if not exist chrome-win32.zip goto Download_chrome-win32.zip
 goto Finish
 
 :Config
