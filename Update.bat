@@ -39,11 +39,12 @@ echo     即将 下载/配置 Chromium......
 echo.&echo.
 echo     1)下载：Chromium
 echo     2)配置：解压缩、创建用户数据目录及快捷方式
-echo     3)创建快捷方式（路径过长时，请用 Chromium.bat 或 Chromium-PPAPI-FLASH.bat）
+echo     3)创建快捷方式（路径过长时，请用 Chromium.bat）
 echo.
-echo     4)更新：PPAPI-FLASH（pepflashplayer.dll,Chromium-PPAPI-FLASH.lnk,Chromium-PPAPI-FLASH.bat）
+echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
 echo.&echo.
 echo     5)删除已下载的文件（避免不同文件错误地断点续传）
+echo     6)删除 Chromium 缓存目录
 echo.
 echo.&echo.
 echo     致谢及声明：
@@ -52,7 +53,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/17；开发：Hugo。
+echo     版本：2015/3/21；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -62,7 +63,8 @@ if /I "%ST%"=="1" goto Download
 if /I "%ST%"=="2" goto Config
 if /I "%ST%"=="3" goto Shortcut
 if /I "%ST%"=="4" goto Flash
-if /I "%ST%"=="5" goto Delete
+if /I "%ST%"=="5" goto Delete1
+if /I "%ST%"=="6" goto Delete2
 echo    无效选择，按任意键返回！
 pause >nul
 goto Main
@@ -156,7 +158,7 @@ if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip
     if exist chrome-win32 rd /s /q chrome-win32
     %sza% x chrome-win32.zip
 ) && (
-    copy /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
+    move /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
 ) && (
     if not exist "chrome-win32\plugins" (md "chrome-win32\plugins")
     for %%I in ("np*.dll") do (
@@ -176,7 +178,7 @@ goto Finish
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
-if not exist LAST_PepperFlash.aria2 if exist LAST_PepperFlash del LAST_PepperFlash
+if exist LAST_PepperFlash del LAST_PepperFlash
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_PepperFlash https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_PepperFlash
 if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&goto Main
 (
@@ -188,17 +190,20 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o PepFlashPlayer.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/PepFlashPlayer.7z
     if not exist PepFlashPlayer.7z goto Flash
     %sza% x -y PepFlashPlayer.7z
-	del LAST_PepperFlash
 	del PepFlashPlayer.7z
-    copy /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
+    move /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
 	goto Shortcut
 ) 
 
-:Delete
+:Delete1
 if exist chrome-win32.zip del chrome-win32.zip
 if exist chrome-win32.zip.aria2 del chrome-win32.zip.aria2
 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
 if exist PepFlashPlayer.7z.aria2 del PepFlashPlayer.7z.aria2
+goto Finish
+
+:Delete2
+if exist %USERPROFILE%\ChromiumCache rd /s /q %USERPROFILE%\ChromiumCache
 
 :Finish
 echo.&echo    处理完成，按任意键返回。
