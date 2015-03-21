@@ -21,8 +21,8 @@ A downloader based on batch and Aria2.
 * 首次使用/更换目录/更新程序，运行 **Update.bat** ，按提示操作即可。
 * **下载及配置完成后**，可运行 快捷方式 或 Chromium.bat 启动浏览器。
 * Chromium.lnk 为 **无内置** Flash 版本；Chromium-PPAPI-FLASH.lnk 为**内置** Flash 版本。
-* 因为字数限制，路径过长时，快捷方式**可能缺少**部分参数；这时，请运行 Chromium.bat。
-* 启用 Enable NPAPI，即可启用系统安装的 Adobe Flash Player。chrome://flags/#enable-npapi
+* 因为快捷方式字数限制，路径过长时，快捷方式**可能缺少**部分参数；另外，路径包含空格时，可能出错。这时，请运行 Chromium.bat。
+* 启用 Enable NPAPI，即可启用**操作系统**安装的 Adobe Flash Player。chrome://flags/#enable-npapi
 
 ### Library
 * 在 phuslu 的 chromium 项目基础上改进。

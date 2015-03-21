@@ -25,19 +25,19 @@ pause >nul
 goto Main
 
 :Chromium
-start %~dp0chrome-win32\chrome.exe --User-data-dir=%~dp0Data --disk-cache-dir=%USERPROFILE%\ChromiumCache
+start "Chromium" "%~dp0chrome-win32\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache"
 exit
 
 :Chromium-PPAPI-FLASH
 if not exist pepflashplayer.dll  echo.&echo.&echo.&echo.&echo.&echo.&echo                                  未发现 pepflashplayer.dll。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-start %~dp0chrome-win32\chrome.exe --User-data-dir=%~dp0Data --disk-cache-dir=%USERPROFILE%\ChromiumCache --ppapi-flash-path=%~dp0pepflashplayer.dll --ppapi-flash-version=17.0.0.134
+start "Chromium"  "%~dp0chrome-win32\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache" --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=17.0.0.134
 exit
 
 :Chromium-APP
-start %~dp0chrome-win32\chrome.exe --User-data-dir=%~dp0Data --disk-cache-dir=%USERPROFILE%\ChromiumCache  --show-app-list
+start "Chromium"  "%~dp0chrome-win32\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache"  --show-app-list
 exit
 
 :Chromium-PPAPI-FLASH-APP
 if not exist pepflashplayer.dll  echo.&echo.&echo.&echo.&echo.&echo.&echo                                  未发现 pepflashplayer.dll。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-start %~dp0chrome-win32\chrome.exe --User-data-dir=%~dp0Data --disk-cache-dir=%USERPROFILE%\ChromiumCache  --show-app-list --ppapi-flash-path=%~dp0pepflashplayer.dll --ppapi-flash-version=17.0.0.134
+start "Chromium"  "%~dp0chrome-win32\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache"  --show-app-list --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=17.0.0.134
 exit
