@@ -54,7 +54,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/21；开发：Hugo。
+echo     版本：2015/3/24；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -93,7 +93,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/23；开发：Hugo。
+echo     版本：2015/3/24；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -172,6 +172,7 @@ if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
+echo.
 echo 请观察以下路径，是否包含空格：
 echo.
 echo 用户数据：%cd%\Data
