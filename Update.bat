@@ -33,6 +33,7 @@ if exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe" Set aria2c=
 if not exist "Tools\aria2\aria2c.exe" if not exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 aria2，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
 
 :Main
+if exist Shortcut.7z del Shortcut.7z
 cls
 echo.
 echo     即将 下载/配置 Chromium......
@@ -92,7 +93,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/17；开发：Hugo。
+echo     版本：2015/3/23；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -171,7 +172,28 @@ if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
+echo 请观察以下路径，是否包含空格：
+echo.
+echo 用户数据：%cd%\Data
+echo 网页缓存：%USERPROFILE%\ChromiumCache
+echo.
+echo 不含空格时，建议输入数字 1
+echo 包含空格时，必须输入数字 2
+echo.
+Set /P ST=   请输入数字：
+echo. 
+if /I "%ST%"=="1" goto Create-Shortcut.bat
+if /I "%ST%"=="2" goto Create-Shortcut_Blank.bat
+echo    无效选择，按任意键返回！
+pause >nul
+goto Shortcut
+
+:Create-Shortcut.bat
 start /min Tools\Create-Shortcut.bat
+goto Finish
+
+:Create-Shortcut_Blank.bat
+start /min Tools\Create-Shortcut_Blank.bat
 goto Finish
 
 :Flash
@@ -192,6 +214,13 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     %sza% x -y PepFlashPlayer.7z
 	del PepFlashPlayer.7z
     move /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
+	:Shortcut.7z
+	%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o Shortcut.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/Shortcut.7z
+	if not exist Shortcut.7z goto Shortcut.7z
+	%sza% x -y Shortcut.7z Chromium.bat  -r
+	%sza% x -y Shortcut.7z -oTools Create-Shortcut.bat -r
+	%sza% x -y Shortcut.7z -oTools Create-Shortcut_Blank.bat -r
+    del Shortcut.7z
 	goto Shortcut
 ) 
 
