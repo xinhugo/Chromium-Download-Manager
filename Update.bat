@@ -54,7 +54,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/24；开发：Hugo。
+echo     版本：2015/3/27；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -93,7 +93,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/24；开发：Hugo。
+echo     版本：2015/3/27；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -151,12 +151,14 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
     )
 ) 
 if not exist chrome-win32.zip goto Download_chrome-win32.zip
+%sza% t chrome-win32.zip *.* -r
 goto Finish
 
 :Config
 if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 (
-    if exist chrome-win32 rd /s /q chrome-win32
+    if exist old-chrome-win32 rd /s /q old-chrome-win32
+	if exist chrome-win32 move /y chrome-win32 old-chrome-win32
     %sza% x chrome-win32.zip
 ) && (
     move /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
