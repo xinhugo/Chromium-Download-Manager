@@ -54,7 +54,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/27；开发：Hugo。
+echo     版本：2015/4/17；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -93,7 +93,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/3/27；开发：Hugo。
+echo     版本：2015/4/17；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -136,7 +136,6 @@ Set Proxy=--all-proxy=127.0.0.1:
 Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
 
 :Download_Link
-if not exist chrome-win32.zip.aria2 if exist chrome-win32.zip del chrome-win32.zip
 if exist LAST_CHANGE del LAST_CHANGE
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_CHANGE --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/LAST_CHANGE|Find /I "SSL/TLS handshake failure"
 If "%ERRORLEVEL%"=="0" (Goto Download_Link)
@@ -146,23 +145,35 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
 ) && (
     echo Already Lastest Version ! && pause >nul&goto Main
 ) || (
-    :Download_chrome-win32.zip
+    :Download_chrome-win32
 	for /f %%I in (LAST_CHANGE) do (
-        %aria2c% -c -s16 -x16 -k1m --remote-time=true %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o chrome-win32.zip --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/%%I/chrome-win32.zip
+	if not exist chrome-win32-%%I.zip.aria2 if exist chrome-win32-%%I.zip goto Test
+	if not exist chrome-win32-%%I.zip.aria2 del /q chrome-win32*.zip
+    %aria2c% -c -s16 -x16 -k1m --remote-time=true %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o chrome-win32-%%I.zip --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/%%I/chrome-win32.zip
     )
 ) 
-if not exist chrome-win32.zip goto Download_chrome-win32.zip
-%sza% t chrome-win32.zip *.* -r |Find /I "子项错误"
-If "%ERRORLEVEL%"=="0" (Goto goto Download_chrome-win32.zip)
+:Test
+for /f %%I in (LAST_CHANGE) do (
+	if not exist chrome-win32-%%I.zip goto Download_chrome-win32
+	%sza% t chrome-win32-%%I.zip *.* -r |Find /I "子项错误"
+	If "%ERRORLEVEL%"=="0" (goto Download_chrome-win32)
+    )
 goto Finish
 
 :Config
-if not exist chrome-win32.zip  echo                      未发现 chrome-win32.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-(
-    if exist old-chrome-win32 rd /s /q old-chrome-win32
-	if exist chrome-win32 move /y chrome-win32 old-chrome-win32
-    %sza% x chrome-win32.zip
-) && (
+echo for each ps in getobject("winmgmts://./root/cimv2:win32_process").instances_>ps.vbs 
+echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs 
+echo next>>ps.vbs
+cscript //nologo ps.vbs |Find /I "%~dp0"
+If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
+for /f %%I in (LAST_CHANGE) do (
+if not exist chrome-win32-%%I.zip  echo                      未发现 chrome-win32-%%I.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
+%sza% t chrome-win32-%%I.zip *.* -r |Find /I "错误"
+If "%ERRORLEVEL%"=="0" (goto Finish)
+if exist old-chrome-win32 rd /s /q old-chrome-win32
+if exist chrome-win32 move /y chrome-win32 old-chrome-win32
+%sza% x chrome-win32-%%I.zip
+ ) && (
     move /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
 ) && (
     if not exist "chrome-win32\plugins" (md "chrome-win32\plugins")
@@ -176,22 +187,11 @@ if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-echo.
-echo 请观察以下路径，是否包含空格：
-echo.
-echo 用户数据：%cd%\Data
-echo 网页缓存：%USERPROFILE%\ChromiumCache
-echo.
-echo 不含空格时，建议输入数字 1
-echo 包含空格时，必须输入数字 2
-echo.
-Set /P ST=   请输入数字：
-echo. 
-if /I "%ST%"=="1" goto Create-Shortcut.bat
-if /I "%ST%"=="2" goto Create-Shortcut_Blank.bat
-echo    无效选择，按任意键返回！
-pause >nul
-goto Shortcut
+echo 网页缓存：%USERPROFILE%\ChromiumCache|Find /I " "
+If "%ERRORLEVEL%"=="0" (goto Create-Shortcut_Blank.bat)
+echo 用户数据：%cd%\Data|Find /I " "
+If "%ERRORLEVEL%"=="0" (goto Create-Shortcut_Blank.bat)
+goto Create-Shortcut.bat
 
 :Create-Shortcut.bat
 start /min Tools\Create-Shortcut.bat
@@ -230,8 +230,8 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
 ) 
 
 :Delete1
-if exist chrome-win32.zip del chrome-win32.zip
-if exist chrome-win32.zip.aria2 del chrome-win32.zip.aria2
+if exist chrome-win32*.zip del chrome-win32*.zip
+if exist chrome-win32*.zip.aria2 del chrome-win32*.zip.aria2
 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
 if exist PepFlashPlayer.7z.aria2 del PepFlashPlayer.7z.aria2
 goto Finish
@@ -240,5 +240,6 @@ goto Finish
 if exist %USERPROFILE%\ChromiumCache rd /s /q %USERPROFILE%\ChromiumCache
 
 :Finish
+if exist ps.vbs del ps.vbs
 echo.&echo    处理完成，按任意键返回。
 pause >nul &goto Main
