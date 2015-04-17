@@ -186,6 +186,8 @@ if exist chrome-win32 move /y chrome-win32 old-chrome-win32
 if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :ffmpegsumo
+if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
+if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
