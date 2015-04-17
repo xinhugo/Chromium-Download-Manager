@@ -43,7 +43,7 @@ echo     2)配置：解压缩、创建用户数据目录及快捷方式
 echo     3)创建快捷方式（路径过长时，请用 Chromium.bat）
 echo.
 echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
-echo     5)更新：ffmpegsumo（ffmpegsumo.dll）
+echo     5)更新（已知问题：环聊扩展崩溃）：ffmpegsumo（ffmpegsumo.dll）
 echo.&echo.
 echo     6)删除已下载的文件（避免不同文件错误地断点续传）
 echo     7)删除 Chromium 缓存目录
@@ -187,35 +187,6 @@ if exist chrome-win32 move /y chrome-win32 old-chrome-win32
 ) 
 if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
-:ffmpegsumo
-echo for each ps in getobject("winmgmts://./root/cimv2:win32_process").instances_>ps.vbs 
-echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs 
-echo next>>ps.vbs
-cscript //nologo ps.vbs |Find /I "%~dp0"
-If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
-if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
-if exist ffmpegsumo.7z del ffmpegsumo.7z
-if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
-Set CA=--check-certificate=true
-rem Set Proxy=--all-proxy=127.0.0.1:
-rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
-if exist LAST_ffmpegsumo del LAST_ffmpegsumo
-%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_ffmpegsumo https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_ffmpegsumo
-if not exist LAST_ffmpegsumo goto ffmpegsumo
-(
-    fc LAST_ffmpegsumo chrome-win32\LAST_ffmpegsumo 
-) && (
-    echo Already Lastest Version ! && pause >nul&goto Main
-) || (
-    ::Download_ffmpegsumo
-    if not exist ffmpegsumo.7z.aria2 if exist ffmpegsumo.7z del ffmpegsumo.7z
-    %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o ffmpegsumo.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/ffmpegsumo.7z
-    if not exist ffmpegsumo.7z goto Download_ffmpegsumo
-    %sza% x -y ffmpegsumo.7z -ochrome-win32
-	del ffmpegsumo.7z
-    move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
-) 
-
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 echo 网页缓存：%USERPROFILE%\ChromiumCache|Find /I " "
@@ -259,6 +230,36 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     del Shortcut.7z
 	goto Shortcut
 ) 
+
+:ffmpegsumo
+echo for each ps in getobject("winmgmts://./root/cimv2:win32_process").instances_>ps.vbs 
+echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs 
+echo next>>ps.vbs
+cscript //nologo ps.vbs |Find /I "%~dp0"
+If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
+if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
+if exist ffmpegsumo.7z del ffmpegsumo.7z
+if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
+Set CA=--check-certificate=true
+rem Set Proxy=--all-proxy=127.0.0.1:
+rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
+if exist LAST_ffmpegsumo del LAST_ffmpegsumo
+%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_ffmpegsumo https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_ffmpegsumo
+if not exist LAST_ffmpegsumo goto ffmpegsumo
+(
+    fc LAST_ffmpegsumo chrome-win32\LAST_ffmpegsumo 
+) && (
+    echo Already Lastest Version ! && pause >nul&goto Main
+) || (
+    ::Download_ffmpegsumo
+    if not exist ffmpegsumo.7z.aria2 if exist ffmpegsumo.7z del ffmpegsumo.7z
+    %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o ffmpegsumo.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/ffmpegsumo.7z
+    if not exist ffmpegsumo.7z goto Download_ffmpegsumo
+    %sza% x -y ffmpegsumo.7z -ochrome-win32
+	del ffmpegsumo.7z
+    move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
+) 
+goto Finish
 
 :Delete1
 if exist chrome-win32*.zip del chrome-win32*.zip
