@@ -43,7 +43,7 @@ echo     2)配置：解压缩、创建用户数据目录及快捷方式
 echo     3)创建快捷方式（路径过长时，请用 Chromium.bat）
 echo.
 echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
-echo     5)更新（已知问题：环聊扩展崩溃）：ffmpegsumo（ffmpegsumo.dll）
+echo     5)更新：ffmpegsumo（ffmpegsumo.dll）
 echo.&echo.
 echo     6)删除已下载的文件（避免不同文件错误地断点续传）
 echo     7)删除 Chromium 缓存目录
