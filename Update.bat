@@ -194,6 +194,7 @@ echo next>>ps.vbs
 cscript //nologo ps.vbs |Find /I "%~dp0"
 If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
 if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
+if exist ffmpegsumo.7z del ffmpegsumo.7z
 if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
