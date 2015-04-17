@@ -43,9 +43,10 @@ echo     2)配置：解压缩、创建用户数据目录及快捷方式
 echo     3)创建快捷方式（路径过长时，请用 Chromium.bat）
 echo.
 echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
+echo     5)更新：ffmpegsumo（ffmpegsumo.dll）
 echo.&echo.
-echo     5)删除已下载的文件（避免不同文件错误地断点续传）
-echo     6)删除 Chromium 缓存目录
+echo     6)删除已下载的文件（避免不同文件错误地断点续传）
+echo     7)删除 Chromium 缓存目录
 echo.
 echo.&echo.
 echo     致谢及声明：
@@ -64,8 +65,9 @@ if /I "%ST%"=="1" goto Download
 if /I "%ST%"=="2" goto Config
 if /I "%ST%"=="3" goto Shortcut
 if /I "%ST%"=="4" goto Flash
-if /I "%ST%"=="5" goto Delete1
-if /I "%ST%"=="6" goto Delete2
+if /I "%ST%"=="5" goto ffmpegsumo
+if /I "%ST%"=="6" goto Delete1
+if /I "%ST%"=="7" goto Delete2
 echo    无效选择，按任意键返回！
 pause >nul
 goto Main
@@ -186,6 +188,11 @@ if exist chrome-win32 move /y chrome-win32 old-chrome-win32
 if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :ffmpegsumo
+echo for each ps in getobject("winmgmts://./root/cimv2:win32_process").instances_>ps.vbs 
+echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs 
+echo next>>ps.vbs
+cscript //nologo ps.vbs |Find /I "%~dp0"
+If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
 if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
 if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
 Set CA=--check-certificate=true
