@@ -185,6 +185,27 @@ if exist chrome-win32 move /y chrome-win32 old-chrome-win32
 ) 
 if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
+:ffmpegsumo
+Set CA=--check-certificate=true
+rem Set Proxy=--all-proxy=127.0.0.1:
+rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
+if exist LAST_ffmpegsumo del LAST_ffmpegsumo
+%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_ffmpegsumo https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_ffmpegsumo
+if not exist LAST_ffmpegsumo goto ffmpegsumo
+(
+    fc LAST_ffmpegsumo chrome-win32\LAST_ffmpegsumo 
+) && (
+    echo Already Lastest Version ! && pause >nul&goto Main
+) || (
+    ::Download_ffmpegsumo
+    if not exist ffmpegsumo.7z.aria2 if exist ffmpegsumo.7z del ffmpegsumo.7z
+    %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o ffmpegsumo.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/ffmpegsumo.7z
+    if not exist ffmpegsumo.7z goto Download_ffmpegsumo
+    %sza% x -y ffmpegsumo.7z -ochrome-win32
+	del ffmpegsumo.7z
+    move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
+) 
+
 :Shortcut
 if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 echo 网页缓存：%USERPROFILE%\ChromiumCache|Find /I " "
