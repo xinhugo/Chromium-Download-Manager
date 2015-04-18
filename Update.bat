@@ -33,6 +33,7 @@ if exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe" Set aria2c=
 if not exist "Tools\aria2\aria2c.exe" if not exist "D:\软件库\绿色工具\网络工具\上传下载\aria2\x64\aria2c.exe"  echo.&echo.&echo.&echo.&echo.&echo.&echo                                    缺少 aria2，请重新下载。&echo.&echo.&echo.&echo.&echo                                         按任意键退出&pause>nul& exit
 
 :Main
+if exist ps.vbs del ps.vbs
 if exist Shortcut.7z del Shortcut.7z
 cls
 echo.
@@ -55,7 +56,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/17；开发：Hugo。
+echo     版本：2015/4/18；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -87,7 +88,7 @@ echo.&echo.
 echo     4)自定义服务器下载（IP 地址/域名）
 echo     5)代理下载（流量经 HTTP/HTTPS 本地代理客户端）
 echo.
-echo     4)返回主菜单
+echo     6)返回主菜单
 echo.&echo.
 echo     致谢及声明：
 echo     1)在 phuslu 的 chromium 项目基础上改进；
@@ -95,7 +96,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/17；开发：Hugo。
+echo     版本：2015/4/18；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -143,22 +144,20 @@ if exist LAST_CHANGE del LAST_CHANGE
 If "%ERRORLEVEL%"=="0" (Goto Download_Link)
 if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto Download
 (
-    fc LAST_CHANGE chrome-win32\LAST_CHANGE
+    fc LAST_CHANGE Application\LAST_CHANGE
 ) && (
     echo Already Lastest Version ! && pause >nul&goto Main
 ) || (
     :Download_chrome-win32
 	for /f %%I in (LAST_CHANGE) do (
 	if not exist chrome-win32-%%I.zip.aria2 if exist chrome-win32-%%I.zip goto Test
-	if not exist chrome-win32-%%I.zip.aria2 del /q chrome-win32*.zip
     %aria2c% -c -s16 -x16 -k1m --remote-time=true %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o chrome-win32-%%I.zip --header=Host:commondatastorage.googleapis.com https://%Server%/chromium-browser-snapshots/Win/%%I/chrome-win32.zip
     )
 ) 
 :Test
 for /f %%I in (LAST_CHANGE) do (
-	if not exist chrome-win32-%%I.zip goto Download_chrome-win32
-	%sza% t chrome-win32-%%I.zip *.* -r |Find /I "子项错误"
-	If "%ERRORLEVEL%"=="0" (goto Download_chrome-win32)
+	%sza% t 1chrome-win32-%%I.zip *.* -r |Find /I "一切正常"
+	If "%ERRORLEVEL%"=="1" (del /q chrome-win32*.zip &goto Download_chrome-win32)
     )
 goto Finish
 
@@ -172,15 +171,16 @@ for /f %%I in (LAST_CHANGE) do (
 if not exist chrome-win32-%%I.zip  echo                      未发现 chrome-win32-%%I.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 %sza% t chrome-win32-%%I.zip *.* -r |Find /I "错误"
 If "%ERRORLEVEL%"=="0" (goto Finish)
-if exist old-chrome-win32 rd /s /q old-chrome-win32
-if exist chrome-win32 move /y chrome-win32 old-chrome-win32
+if exist Old_Application rd /s /q Old_Application
+if exist Application move /y Application Old_Application
 %sza% x chrome-win32-%%I.zip
+rename chrome-win32 Application
  ) && (
-    move /y LAST_CHANGE "chrome-win32\LAST_CHANGE"
+    move /y LAST_CHANGE "Application\LAST_CHANGE"
 ) && (
-    if not exist "chrome-win32\plugins" (md "chrome-win32\plugins")
-    for %%I in ("np*.dll") do (
-      copy /y "%%~I" "chrome-win32\plugins\%%~nxI"
+    rem if not exist "Application\plugins" (md "Application\plugins")
+    rem for %%I in ("np*.dll") do (
+    rem copy /y "%%~I" "Application\plugins\%%~nxI"
     )
 ) && (
     if not exist "%~dp0Data" (md "%~dp0Data")
@@ -188,7 +188,7 @@ if exist chrome-win32 move /y chrome-win32 old-chrome-win32
 if exist PepFlashPlayer.7z %sza% x -y PepFlashPlayer.7z
 
 :Shortcut
-if not exist chrome-win32\chrome.exe  echo                      未发现 chrome-win32\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
+if not exist Application\chrome.exe  echo                      未发现 Application\chrome.exe，请返回菜单后按 2 配置。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 echo 网页缓存：%USERPROFILE%\ChromiumCache|Find /I " "
 If "%ERRORLEVEL%"=="0" (goto Create-Shortcut_Blank.bat)
 echo 用户数据：%cd%\Data|Find /I " "
@@ -204,6 +204,7 @@ start /min Tools\Create-Shortcut_Blank.bat
 goto Finish
 
 :Flash
+if exist Old_Application\LAST_PepperFlash copy /y Old_Application\LAST_PepperFlash Application
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
@@ -211,7 +212,7 @@ if exist LAST_PepperFlash del LAST_PepperFlash
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_PepperFlash https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_PepperFlash
 if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&goto Main
 (
-    fc LAST_PepperFlash chrome-win32\LAST_PepperFlash 
+    fc LAST_PepperFlash Application\LAST_PepperFlash 
 ) && (
     echo Already Lastest Version ! && pause >nul&goto Main
 ) || (
@@ -220,7 +221,7 @@ if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&
     if not exist PepFlashPlayer.7z goto Flash
     %sza% x -y PepFlashPlayer.7z
 	del PepFlashPlayer.7z
-    move /y LAST_PepperFlash "chrome-win32\LAST_PepperFlash"
+    move /y LAST_PepperFlash "Application\LAST_PepperFlash"
 	:Shortcut.7z
 	%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o Shortcut.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/Shortcut.7z
 	if not exist Shortcut.7z goto Shortcut.7z
@@ -237,9 +238,11 @@ echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs
 echo next>>ps.vbs
 cscript //nologo ps.vbs |Find /I "%~dp0"
 If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
-if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -ochrome-win32
+if exist Old_Application\LAST_ffmpegsumo copy /y Old_Application\LAST_ffmpegsumo Application
+if exist Old_Application\LAST_ffmpegsumo copy /y Old_Application\ffmpegsumo.dll Application
+if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -oApplication
 if exist ffmpegsumo.7z del ffmpegsumo.7z
-if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
+if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "Application\LAST_ffmpegsumo"
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
@@ -247,17 +250,17 @@ if exist LAST_ffmpegsumo del LAST_ffmpegsumo
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_ffmpegsumo https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_ffmpegsumo
 if not exist LAST_ffmpegsumo goto ffmpegsumo
 (
-    fc LAST_ffmpegsumo chrome-win32\LAST_ffmpegsumo 
+    fc LAST_ffmpegsumo Application\LAST_ffmpegsumo 
 ) && (
-    echo Already Lastest Version ! && pause >nul&goto Main
+    echo Already Lastest Version ! &del ps.vbs&del LAST_ffmpegsumo& pause >nul&goto Main
 ) || (
     ::Download_ffmpegsumo
     if not exist ffmpegsumo.7z.aria2 if exist ffmpegsumo.7z del ffmpegsumo.7z
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o ffmpegsumo.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/ffmpegsumo.7z
     if not exist ffmpegsumo.7z goto Download_ffmpegsumo
-    %sza% x -y ffmpegsumo.7z -ochrome-win32
+    %sza% x -y ffmpegsumo.7z -oApplication
 	del ffmpegsumo.7z
-    move /y LAST_ffmpegsumo "chrome-win32\LAST_ffmpegsumo"
+    move /y LAST_ffmpegsumo "Application\LAST_ffmpegsumo"
 ) 
 goto Finish
 
