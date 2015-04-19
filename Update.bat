@@ -46,7 +46,7 @@ echo.
 echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
 echo     5)更新：ffmpegsumo（ffmpegsumo.dll）
 echo.&echo.
-echo     6)删除已下载的文件（避免不同文件错误地断点续传）
+echo     6)删除已下载的 Chromium 压缩包
 echo     7)删除 Chromium 缓存目录
 echo.
 echo.&echo.
@@ -146,7 +146,7 @@ if not exist LAST_CHANGE echo.&echo    下载失败，按任意键返回。&pause >nul&goto 
 (
     fc LAST_CHANGE Application\LAST_CHANGE
 ) && (
-    echo Already Lastest Version ! && pause >nul&goto Main
+    echo Already Lastest Version ! &del LAST_CHANGE&pause >nul&goto Main
 ) || (
     :Download_chrome-win32
 	for /f %%I in (LAST_CHANGE) do (
@@ -171,9 +171,10 @@ for /f %%I in (LAST_CHANGE) do (
 if not exist chrome-win32-%%I.zip  echo                      未发现 chrome-win32-%%I.zip，请返回菜单后按 1 下载。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
 %sza% t chrome-win32-%%I.zip *.* -r |Find /I "错误"
 If "%ERRORLEVEL%"=="0" (goto Finish)
-if exist Old_Application rd /s /q Old_Application
-if exist Application move /y Application Old_Application
+if exist Application rd /s /q Application
+if exist chrome-win32 rd /s /q chrome-win32
 %sza% x chrome-win32-%%I.zip
+ping 127.0.0.1 -n 3 >nul
 rename chrome-win32 Application
  ) && (
     move /y LAST_CHANGE "Application\LAST_CHANGE"
@@ -204,7 +205,6 @@ start /min Tools\Create-Shortcut_Blank.bat
 goto Finish
 
 :Flash
-if exist Old_Application\LAST_PepperFlash copy /y Old_Application\LAST_PepperFlash Application
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
@@ -212,16 +212,16 @@ if exist LAST_PepperFlash del LAST_PepperFlash
 %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o LAST_PepperFlash https://github.com/xinhugo/Chromium-Download-Manager/raw/Beta/LAST_PepperFlash
 if not exist LAST_PepperFlash echo.&echo    下载失败，按任意键返回。&pause >nul&goto Main
 (
-    fc LAST_PepperFlash Application\LAST_PepperFlash 
+    fc LAST_PepperFlash Plugins\LAST_PepperFlash
 ) && (
-    echo Already Lastest Version ! && pause >nul&goto Main
+    echo Already Lastest Version ! &del LAST_PepperFlash& pause >nul&goto Main
 ) || (
     if not exist PepFlashPlayer.7z.aria2 if exist PepFlashPlayer.7z del PepFlashPlayer.7z
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o PepFlashPlayer.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/PepFlashPlayer.7z
     if not exist PepFlashPlayer.7z goto Flash
     %sza% x -y PepFlashPlayer.7z
 	del PepFlashPlayer.7z
-    move /y LAST_PepperFlash "Application\LAST_PepperFlash"
+    move /y LAST_PepperFlash "Plugins\LAST_PepperFlash"
 	:Shortcut.7z
 	%aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o Shortcut.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/Shortcut.7z
 	if not exist Shortcut.7z goto Shortcut.7z
@@ -238,11 +238,12 @@ echo wscript.echo ps.handle^&vbtab^&ps.name^&vbtab^&ps.executablepath>>ps.vbs
 echo next>>ps.vbs
 cscript //nologo ps.vbs |Find /I "%~dp0"
 If "%ERRORLEVEL%"=="0" (echo.&echo Chromium 正在运行，退出后才能配置它。&goto Finish)
-if exist Old_Application\LAST_ffmpegsumo copy /y Old_Application\LAST_ffmpegsumo Application
-if exist Old_Application\LAST_ffmpegsumo copy /y Old_Application\ffmpegsumo.dll Application
-if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -oApplication
+if exist Plugins\LAST_ffmpegsumo copy /y Plugins\LAST_ffmpegsumo Application
+if exist Plugins\LAST_ffmpegsumo copy /y Plugins\ffmpegsumo.dll Application
+if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -oPlugins
+if exist ffmpegsumo.7z copy /y Plugins\ffmpegsumo.dll Application
 if exist ffmpegsumo.7z del ffmpegsumo.7z
-if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "Application\LAST_ffmpegsumo"
+if exist ffmpegsumo.7z move /y LAST_ffmpegsumo "Plugins\LAST_ffmpegsumo"
 Set CA=--check-certificate=true
 rem Set Proxy=--all-proxy=127.0.0.1:
 rem Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
@@ -258,9 +259,10 @@ if not exist LAST_ffmpegsumo goto ffmpegsumo
     if not exist ffmpegsumo.7z.aria2 if exist ffmpegsumo.7z del ffmpegsumo.7z
     %aria2c% -c -s16 -x16 -k1m --remote-time=true --connect-timeout=30 %CA% --enable-mmap --file-allocation=falloc --disk-cache=64M %Proxy%%Port% -o ffmpegsumo.7z https://raw.githubusercontent.com/xinhugo/Chromium-Download-Manager/Beta/ffmpegsumo.7z
     if not exist ffmpegsumo.7z goto Download_ffmpegsumo
-    %sza% x -y ffmpegsumo.7z -oApplication
+    if exist ffmpegsumo.7z %sza% x -y ffmpegsumo.7z -oPlugins
+    if exist ffmpegsumo.7z copy /y Plugins\ffmpegsumo.dll Application
 	del ffmpegsumo.7z
-    move /y LAST_ffmpegsumo "Application\LAST_ffmpegsumo"
+    move /y LAST_ffmpegsumo "Plugins\LAST_ffmpegsumo"
 ) 
 goto Finish
 
