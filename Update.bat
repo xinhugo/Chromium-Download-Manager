@@ -46,7 +46,7 @@ echo.
 echo     4)更新：PPAPI-FLASH（pepflashplayer.dll）
 echo     5)更新：ffmpegsumo（ffmpegsumo.dll）
 echo.&echo.
-echo     6)删除已下载的 Chromium 压缩包
+echo     6)删除旧的 Chromium 压缩包（仅保留最近一个版本）
 echo     7)删除 Chromium 缓存目录
 echo.
 echo.&echo.
@@ -56,7 +56,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/18；开发：Hugo。
+echo     版本：2015/4/23；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -96,7 +96,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/18；开发：Hugo。
+echo     版本：2015/4/23；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -267,10 +267,13 @@ if not exist LAST_ffmpegsumo goto ffmpegsumo
 goto Finish
 
 :Delete1
-if exist chrome-win32*.zip del chrome-win32*.zip
-if exist chrome-win32*.zip.aria2 del chrome-win32*.zip.aria2
-if exist PepFlashPlayer.7z del PepFlashPlayer.7z
-if exist PepFlashPlayer.7z.aria2 del PepFlashPlayer.7z.aria2
+for /f %%I in (Application\LAST_CHANGE) do (
+	if not exist Temp md Temp
+	if exist chrome-win32-%%I.zip move chrome-win32-%%I.zip Temp
+    if exist chrome-win32*.zip del chrome-win32*.zip
+	if exist Temp\chrome-win32-%%I.zip move Temp\chrome-win32-%%I.zip
+	rd Temp
+    )
 goto Finish
 
 :Delete2
