@@ -267,7 +267,7 @@ if not exist LAST_ffmpegsumo goto ffmpegsumo
 goto Finish
 
 :Delete1
-for /f %%I in (Application\LAST_CHANGE) do (
+if exist Application\LAST_CHANGE for /f %%I in (Application\LAST_CHANGE) do (
 	if not exist Temp md Temp
 	if exist chrome-win32-%%I.zip move chrome-win32-%%I.zip Temp
     if exist chrome-win32*.zip del chrome-win32*.zip
