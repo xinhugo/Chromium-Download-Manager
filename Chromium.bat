@@ -30,7 +30,7 @@ exit
 
 :Chromium-PPAPI-FLASH
 if not exist pepflashplayer.dll  echo.&echo.&echo.&echo.&echo.&echo.&echo                                  未发现 pepflashplayer.dll。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-start "Chromium"  "%~dp0Application\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache" --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=17.0.0.188
+start "Chromium"  "%~dp0Application\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache" --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=18.0.0.160
 exit
 
 :Chromium-APP
@@ -39,5 +39,5 @@ exit
 
 :Chromium-PPAPI-FLASH-APP
 if not exist pepflashplayer.dll  echo.&echo.&echo.&echo.&echo.&echo.&echo                                  未发现 pepflashplayer.dll。&echo.&echo.&echo.&echo.&echo                                         按任意键返回&pause>nul& goto Main
-start "Chromium"  "%~dp0Application\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache"  --show-app-list --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=17.0.0.188
+start "Chromium"  "%~dp0Application\chrome.exe" --User-data-dir="%~dp0Data" --disk-cache-dir="%USERPROFILE%\ChromiumCache"  --show-app-list --ppapi-flash-path="%~dp0pepflashplayer.dll" --ppapi-flash-version=18.0.0.160
 exit
