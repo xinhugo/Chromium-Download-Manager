@@ -8,6 +8,10 @@ A downloader based on batch and Aria2.
 最新发行版：https://github.com/xinhugo/Chromium-Download-Manager/releases/latest
 
 
+Chromium 自 Revision:332900 开始，移除了 ffmpegsumo.dll，使用 Google Chrome Canary 的 ffmpegsumo.dll 以支持 MP3 解码的方法，暂时失效。
+目前最后一个支持上述方法的 Chromium 版本为 45.0.2423.0 (开发者内部版本) （32 位）Revision:332890。
+
+
 ### Summary
 * 便携版 Chromium
 
@@ -18,7 +22,9 @@ A downloader based on batch and Aria2.
     * 代理下载（流量经 HTTP/HTTPS 本地代理客户端）
 * 多线程下载、断点续传、验证 SSL 证书（自定义下载除外），适应中国（对外）网络。
 * 用户数据（不含缓存）保存在当前目录，系便携版本。
-* 在线更新 PPAPI-FLASH
+* 支持下载/配置指定版本
+* 在线更新 FFmpeg （提取自自 Google Chrome Canary）
+* 在线更新 PPAPI-FLASH （提取自自 Google Chrome Canary）
 
 ### Usage
 * 首次使用/更换目录/更新程序，运行 **Update.bat** ，按提示操作即可。

@@ -56,7 +56,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/23；开发：Hugo。
+echo     版本：2015/6/12；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -87,8 +87,10 @@ echo     3)直接下载（dl.google.com）
 echo.&echo. 
 echo     4)自定义服务器下载（IP 地址/域名）
 echo     5)代理下载（流量经 HTTP/HTTPS 本地代理客户端）
+echo.&echo. 
+echo     6)下载指定版本
 echo.
-echo     6)返回主菜单
+echo     7)返回主菜单
 echo.&echo.
 echo     致谢及声明：
 echo     1)在 phuslu 的 chromium 项目基础上改进；
@@ -96,7 +98,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/4/23；开发：Hugo。
+echo     版本：2015/6/12；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -107,7 +109,8 @@ if /I "%ST%"=="2" goto Download_Direct_2
 if /I "%ST%"=="3" goto Download_Direct_3
 if /I "%ST%"=="4" goto Download_Custom
 if /I "%ST%"=="5" goto Download_Proxy
-if /I "%ST%"=="6" goto Main
+if /I "%ST%"=="6" goto Download_Ver
+if /I "%ST%"=="7" goto Main
 echo    无效选择，按任意键返回！
 pause >nul
 goto Download
@@ -133,10 +136,17 @@ Set CA=--check-certificate=false
 goto Download_Link
 
 :Download_Proxy
-Set Server=www.google.com.hk
+Set Server=www.google.co.jp
 Set CA=--check-certificate=true
 Set Proxy=--all-proxy=127.0.0.1:
 Set /P Port=   请输入 HTTP/HTTPS 代理客户端的端口号：
+
+:Download_Ver
+Set /P Ver=   请输入修订版本号：
+echo %Ver% >>LAST_CHANGE
+Set Server=www.google.co.jp
+Set CA=--check-certificate=true
+goto Download_chrome-win32
 
 :Download_Link
 if exist LAST_CHANGE del LAST_CHANGE
