@@ -49,6 +49,8 @@ echo.&echo.
 echo     6)删除旧的 Chromium 压缩包（仅保留最近一个版本）
 echo     7)删除 Chromium 缓存目录
 echo.
+echo     8)指定要配置的 Chromium 版本     
+echo.
 echo.&echo.
 echo     致谢及声明：
 echo     1)在 phuslu 的 chromium 项目基础上改进；
@@ -56,7 +58,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/6/12；开发：Hugo。
+echo     版本：2015/6/19；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -69,6 +71,7 @@ if /I "%ST%"=="4" goto Flash
 if /I "%ST%"=="5" goto ffmpegsumo
 if /I "%ST%"=="6" goto Delete1
 if /I "%ST%"=="7" goto Delete2
+if /I "%ST%"=="8" goto Config_Ver
 echo    无效选择，按任意键返回！
 pause >nul
 goto Main
@@ -98,7 +101,7 @@ echo     2)调用了32位的 7-Zip 命令行版本用于解压缩；
 echo     3)7-Zip 发布于 GNU LGPL 协议，www.7-zip.org 的能够找到其源代码；
 echo     4)调用了 aria2 从 HTTP 服务器下载数据。
 echo.&echo.
-echo     版本：2015/6/12；开发：Hugo。
+echo     版本：2015/6/19；开发：Hugo。
 echo.
 echo ---------------------------------------------------------------------------
 echo.
@@ -288,6 +291,11 @@ goto Finish
 
 :Delete2
 if exist %USERPROFILE%\ChromiumCache rd /s /q %USERPROFILE%\ChromiumCache
+goto Finish
+
+:Config_Ver
+Set /P Ver=   请输入修订版本号：
+echo %Ver% >>LAST_CHANGE
 
 :Finish
 if exist ps.vbs del ps.vbs
