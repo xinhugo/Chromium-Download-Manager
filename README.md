@@ -7,10 +7,10 @@ A downloader based on batch and Aria2.
 
 最新发行版：https://github.com/xinhugo/Chromium-Download-Manager/releases/latest
 
-
-Chromium 自 Revision:332900 开始，移除了 ffmpegsumo.dll，使用 Google Chrome Canary 的 ffmpegsumo.dll 以支持 MP3 解码的方法，暂时失效。
+### 提示
+* Chromium 自 Revision:332900 开始，移除了 ffmpegsumo.dll，使用 Google Chrome Canary 的 ffmpegsumo.dll 以支持 MP3 解码的方法，暂时失效。
 目前最后一个支持上述方法的 Chromium 版本为 45.0.2423.0 (开发者内部版本) （32 位）Revision:332890。
-
+* Chromium 45 开始，不再支持 NPAPI 插件。Chromium 44.0.2403.0 {#330270} 是最后一个支持 NPAPI 插件的版本。
 
 ### Summary
 * 便携版 Chromium
